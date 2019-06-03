@@ -119,11 +119,13 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SendBroadcast.cpp" />
     <ClCompile Include="WorkWithClient.cpp" />
+    <ClCompile Include="WorkWithFiles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actions.h" />
     <ClInclude Include="SendBroadcast.h" />
     <ClInclude Include="WorkWithClient.h" />
+    <ClInclude Include="WorkWithFiles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,18 +7,13 @@
 
 #include "WorkWithClient.h"
 #include "SendBroadcast.h"
+#include "Actions.h"
 
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 
 int main()
 {
-	char b[] = "1";
-	Action a = (Action)(b[0] - '0');
-	printf_s("%d\n", a);
-	getchar();
-	return 0;
-
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{

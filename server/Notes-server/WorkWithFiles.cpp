@@ -41,7 +41,7 @@ char **getNotesToWriteToTheEnd(int number_of_notes, char *user_name, int *result
 		{
 			pos_of_notes_for_del = ftell(in);
 		}
-		res = fscanf_s(in, "%s\n", notes);
+		res = fscanf_s(in, "%s\n", notes, NOTES_MAX_LEN);
 		if (res != EOF)
 		{
 			read_lines_count += res;
@@ -87,7 +87,7 @@ bool registeredUser(char *new_user_name, char *password)
 	fopen_s(&in, USERS_FILE_NAME, "r");
 	while (!feof(in) && !ret_val)
 	{
-		read_res = fscanf_s(in, "%s %s\n", existing_user_name, existing_password);
+		read_res = fscanf_s(in, "%s %s\n", existing_user_name, USER_NAME_MAX_LEN, existing_password, PASSWORD_MAX_LEN);
 		if (read_res != EOF)
 		{
 			ret_val = (strcmp(existing_user_name, new_user_name) == 0);

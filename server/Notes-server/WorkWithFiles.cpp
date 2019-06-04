@@ -12,8 +12,8 @@ char *formFileName(char *user_name)
 {
 	int len = strlen(user_name) + strlen(PATH_FOR_USERS_DATA) + strlen(USER_DATA_FILE_EXT);
 	char *result = (char*)calloc(len + 1, sizeof(char));
-	memcpy_s(result, len + 1, user_name, strlen(user_name));
-	strcat_s(result, len + 1, PATH_FOR_USERS_DATA);
+	memcpy_s(result, len + 1, PATH_FOR_USERS_DATA, strlen(PATH_FOR_USERS_DATA));
+	strcat_s(result, len + 1, user_name);
 	strcat_s(result, len + 1, USER_DATA_FILE_EXT);
 	return result;
 }
@@ -105,7 +105,7 @@ int addNewUser(char *new_user_name, char *password)
 	int ret_val = 0;
 	FILE *in;
 	ret_val = fopen_s(&in, USERS_FILE_NAME, "a");
-	if (ret_val != 0)
+	if (ret_val == 0)
 	{
 		fprintf_s(in, "%s %s\n", new_user_name, password);
 		fclose(in);
@@ -159,5 +159,41 @@ int changeNotes(int number_of_notes, char *user_name, char *notes)
 	}
 	free(usefullNotes);
 	fclose(out);
+	return ret_val;
+}
+
+int sendNotes(SOCKET sock, bool in_system, char *user_name)
+{
+	int ret_val = 0;
+	int send_res = 1;
+	if (in_system)
+	{
+		char *file_name = formFileName(user_name);
+		char *notes = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
+		int res;
+		FILE *in;
+		fopen_s(&in, file_name, "r");
+		while (!feof(in) && send_res != SOCKET_ERROR)
+		{
+			res = fscanf_s(in, "%s\n", notes, NOTES_MAX_LEN);
+			if (res > 0)
+			{
+				send_res = send(sock, notes, strlen(notes), 0);
+				if (send_res == SOCKET_ERROR)
+				{
+					ret_val = 1;
+				}
+			}
+		}
+		fclose(in);
+	}
+	else
+	{
+		send_res = send(sock, NOTES_NOT_FOUND, strlen(NOTES_NOT_FOUND), 0);
+		if (send_res == SOCKET_ERROR)
+		{
+			ret_val = 1;
+		}
+	}
 	return ret_val;
 }

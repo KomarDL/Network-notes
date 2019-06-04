@@ -36,12 +36,16 @@ int registerUser(SOCKET sock, bool &in_system, char **user_name)
 				in_system = false;
 			}
 			/*send answer*/
-			res = send(sock, (char*)in_system, sizeof(in_system), 0);
+			res = send(sock, (char*)&in_system, sizeof(in_system), 0);
 			if (res == SOCKET_ERROR)
 			{
 				ret_val = 1;
 			}
-			ret_val = 0;
+			else
+			{
+				ret_val = 0;
+			}
+			
 		}
 		else
 		{
@@ -103,7 +107,7 @@ int loginUser(SOCKET sock, bool &in_system, char **user_name)
 
 int addNotes(SOCKET sock, bool in_system, char *user_name)
 {
-	int ret_val = 0, res;
+	int ret_val = 0;
 	if (in_system)
 	{
 		int recv_res, total_recv_res;
@@ -131,22 +135,6 @@ int addNotes(SOCKET sock, bool in_system, char *user_name)
 		if (!ret_val)
 		{
 			addNewNotes(notes_buff, user_name);
-			/*send answer*/
-			res = send(sock, (char*)&ret_val, sizeof(ret_val), 0);
-			if (res == SOCKET_ERROR)
-			{
-				ret_val = 1;
-			}
-		}
-	}
-	else
-	{
-		ret_val = 1;
-		res = send(sock, (char*)&ret_val, sizeof(ret_val), 0);
-		ret_val = 0;
-		if (res == SOCKET_ERROR)
-		{
-			ret_val = 1;
 		}
 	}
 	return ret_val;
@@ -162,26 +150,8 @@ int removeNotes(SOCKET sock, bool in_system, char *user_name)
 		if (recv_res != SOCKET_ERROR && recv_res != 0)
 		{
 			res = deleteNotes(number_of_notes, user_name);
-			if (!res)
-			{
-				res = send(sock, (char*)&ret_val, sizeof(ret_val), 0);
-				if (res == SOCKET_ERROR)
-				{
-					ret_val = 1;
-				}
-			}
 		}
 
-	}
-	else
-	{
-		ret_val = 1;
-		res = send(sock, (char*)&ret_val, sizeof(ret_val), 0);
-		ret_val = 0;
-		if (res == SOCKET_ERROR)
-		{
-			ret_val = 1;
-		}
 	}
 	return ret_val;
 }
@@ -201,31 +171,12 @@ int modifyNotes(SOCKET sock, bool in_system, char *user_name)
 			if (recv_res != SOCKET_ERROR && recv_res != 0)
 			{
 				res = changeNotes(number_of_notes, user_name, notes);
-				if (!res)
-				{
-					res = send(sock, (char*)&ret_val, sizeof(ret_val), 0);
-					if (res == SOCKET_ERROR)
-					{
-						ret_val = 1;
-					}
-				}
 			}
 			else
 			{
 				ret_val = 1;
 			}
 			free(notes);
-		}
-
-	}
-	else
-	{
-		ret_val = 1;
-		res = send(sock, (char*)&ret_val, sizeof(ret_val), 0);
-		ret_val = 0;
-		if (res == SOCKET_ERROR)
-		{
-			ret_val = 1;
 		}
 	}
 	return ret_val;

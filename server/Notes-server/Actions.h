@@ -3,7 +3,7 @@
 
 typedef enum _Action
 {
-	Registrate,
+	Registrate = 1,
 	Login,
 	AddNotes,
 	RemoveNotes,

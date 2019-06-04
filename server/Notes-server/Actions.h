@@ -12,6 +12,10 @@ typedef enum _Action
 
 #define USER_NAME_MAX_LEN 31
 #define PASSWORD_MAX_LEN USER_NAME_MAX_LEN
+#define NOTES_MAX_LEN 256
 
-int registerUser(SOCKET sock, bool &in_system);
-int loginUser(SOCKET sock, bool &in_system);
+int registerUser(SOCKET sock, bool &in_system, char **user_name);
+int loginUser(SOCKET sock, bool &in_system, char **user_name);
+int addNotes(SOCKET sock, bool in_system, char *user_name);
+int removeNotes(SOCKET sock, bool in_system, char *user_name);
+int modifyNotes(SOCKET sock, bool in_system, char *user_name);

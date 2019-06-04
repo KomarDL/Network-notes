@@ -31,4 +31,8 @@
 *.out
 *.app
 
+<<<<<<< HEAD
 *.vs
+=======
+*.vs
+>>>>>>> 4f9fe3fe11ea39eaccf196db19451e66ed31be27

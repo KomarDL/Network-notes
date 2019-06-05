@@ -25,3 +25,21 @@ int sendReqToAddNotes(SOCKET sock, Action action_type)
 	}
 	return ret_val;
 }
+
+int sendReqToRemoveNotes(SOCKET sock, Action action_type, char **notes, int len, bool &correct_input)
+{
+	correct_input = getValidNotesNumber(notes, len);
+	if (!correct_input)
+	{
+
+	}
+}
+
+int sendReqToModifyNotes(SOCKET sock, Action action_type, char **notes, int len, bool &correct_input)
+{
+	correct_input = getValidNotesNumber(notes, len);
+	if (!correct_input)
+	{
+
+	}
+}

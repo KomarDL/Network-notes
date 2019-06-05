@@ -48,7 +48,9 @@ int main()
 
 	char *action = (char*)calloc(ACTION_STR_LEN, sizeof(char));
 	Action action_type;
-	
+	bool correct_input = false;
+	system("cls");
+
 	do
 	{
 		displayNotes(notes, len);
@@ -60,11 +62,8 @@ int main()
 			tmp = atoi(action);
 			res = defineAction(tmp, action_type);
 			system("cls");
-			if (res || (action_type == Registrate && action_type == Login))
-			{
-				printf_s("¬ведено некорректное значение\n\n");
-			}
 		} while (res || (action_type == Registrate && action_type == Login));
+
 		switch (action_type)
 		{
 		case AddNotes:
@@ -72,10 +71,18 @@ int main()
 			getNotes(sock, &notes, len);
 			break;
 		case RemoveNotes:
-			//res = sendReqToRemoveNotes();
+			res = sendReqToRemoveNotes(sock, action_type, notes, len, correct_input);
+			if (correct_input)
+			{
+				getNotes(sock, &notes, len);
+			}
 			break;
 		case ModifyNotes:
-			//res = sendReqToModifyNotes();
+			res = sendReqToModifyNotes(sock, action_type, notes, len, correct_input);
+			if (correct_input)
+			{
+				getNotes(sock, &notes, len);
+			}
 			break;
 		}
 		//tmp = atoi(action);

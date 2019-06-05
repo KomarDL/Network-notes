@@ -31,3 +31,13 @@ void userInput(const char msg[], char *input_str, int str_len)
 		while (getchar() != '\n');
 	}
 }
+
+bool getValidNotesNumber(char **notes, int len)
+{
+	bool ret_val = false;
+	if (!(len == 1 && (strcmp(notes[0], NOTES_NOT_FOUND) == 0)))
+	{
+
+	}
+	return ret_val;
+}

@@ -14,40 +14,40 @@ Action defineAction(char *action)
 //return 1 if errors occurs
 int performAction(SOCKET sock, Action action_type, bool &in_system, char **user_name)
 {
-	int res;
+	int res = 0;
 	switch (action_type)
 	{
 	case Registrate:
 		res = registerUser(sock, in_system, user_name);
-		if (!res)
+		if (!res && in_system)
 		{
 			res = sendNotes(sock, in_system, *user_name);
 		}
 		break;
 	case Login:
 		res = loginUser(sock, in_system, user_name);
-		if (!res)
+		if (!res && in_system)
 		{
 			res = sendNotes(sock, in_system, *user_name);
 		}
 		break;
 	case AddNotes:
 		res = addNotes(sock, in_system, *user_name);
-		if (!res)
+		if (!res && in_system)
 		{
 			res = sendNotes(sock, in_system, *user_name);
 		}
 		break;
 	case RemoveNotes:
 		res = removeNotes(sock, in_system, *user_name);
-		if (!res)
+		if (!res && in_system)
 		{
 			res = sendNotes(sock, in_system, *user_name);
 		}
 		break;
 	case ModifyNotes:
 		res = modifyNotes(sock, in_system, *user_name);
-		if (!res)
+		if (!res && in_system)
 		{
 			res = sendNotes(sock, in_system, *user_name);
 		}

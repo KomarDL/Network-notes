@@ -50,20 +50,20 @@ char **getNotesToWriteToTheEnd(int number_of_notes, char *user_name, int *result
 				if (result_curr_pos == len)
 				{
 					len = 2 * len + 1;
-					result = (char**)realloc(result, len);
+					result = (char**)realloc(result, len * sizeof(char*));
 					for (int i = result_curr_pos; i < len; i++)
 					{
 						result[i] = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
 					}
 				}
 				strcpy_s(result[result_curr_pos], NOTES_MAX_LEN, notes);
-				result[result_curr_pos] = (char*)realloc(result[result_curr_pos], strlen(notes) + 1);
+				result[result_curr_pos] = (char*)realloc(result[result_curr_pos], (strlen(notes) + 1) * sizeof(char));
 				result_curr_pos++;
 			}
 
 		}
 	}
-	result = (char**)realloc(result, result_curr_pos);
+	result = (char**)realloc(result, result_curr_pos * sizeof(char*));
 	*result_len = result_curr_pos;
 	fclose(in);
 	/*truncate file*/
@@ -109,6 +109,12 @@ int addNewUser(char *new_user_name, char *password)
 	{
 		fprintf_s(in, "%s %s\n", new_user_name, password);
 		fclose(in);
+		/*creat file for new user*/
+		char *file_name = formFileName(new_user_name);
+		fopen_s(&in, file_name, "w");
+		fclose(in);
+
+		free(file_name);
 	}
 	else
 	{
@@ -169,15 +175,18 @@ int sendNotes(SOCKET sock, bool in_system, char *user_name)
 	if (in_system)
 	{
 		char *file_name = formFileName(user_name);
-		char *notes = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
+		char *notes = (char*)calloc(NOTES_MAX_LEN + 1, sizeof(char));
 		int res;
 		FILE *in;
-		fopen_s(&in, file_name, "r");
+		int notes_sended_count = 0;
+		res = fopen_s(&in, file_name, "r");
+		char *tmp;
 		while (!feof(in) && send_res != SOCKET_ERROR)
 		{
-			res = fscanf_s(in, "%s\n", notes, NOTES_MAX_LEN);
-			if (res > 0)
+			tmp = fgets(notes, NOTES_MAX_LEN + 1, in);
+			if (tmp != NULL)
 			{
+				notes_sended_count++;
 				send_res = send(sock, notes, strlen(notes), 0);
 				if (send_res == SOCKET_ERROR)
 				{
@@ -186,13 +195,13 @@ int sendNotes(SOCKET sock, bool in_system, char *user_name)
 			}
 		}
 		fclose(in);
-	}
-	else
-	{
-		send_res = send(sock, NOTES_NOT_FOUND, strlen(NOTES_NOT_FOUND), 0);
-		if (send_res == SOCKET_ERROR)
+		if (!ret_val && notes_sended_count == 0)
 		{
-			ret_val = 1;
+			send_res = send(sock, NOTES_NOT_FOUND, strlen(NOTES_NOT_FOUND), 0);
+			if (send_res == SOCKET_ERROR)
+			{
+				ret_val = 1;
+			}
 		}
 	}
 	return ret_val;

@@ -84,7 +84,7 @@ int loginUser(SOCKET sock, bool &in_system, char **user_name)
 				in_system = false;
 			}
 			/*send answer*/
-			res = send(sock, (char*)in_system, sizeof(in_system), 0);
+			res = send(sock, (char*)&in_system, sizeof(in_system), 0);
 			if (res == SOCKET_ERROR)
 			{
 				ret_val = 1;
@@ -110,7 +110,7 @@ int addNotes(SOCKET sock, bool in_system, char *user_name)
 	int ret_val = 0;
 	if (in_system)
 	{
-		int recv_res, total_recv_res;
+		int recv_res, total_recv_res = 0;
 		char *notes_buff = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
 		char *tmp = notes_buff;
 		int tmp_len = NOTES_MAX_LEN - 1;

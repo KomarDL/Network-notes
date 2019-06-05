@@ -165,8 +165,8 @@ int modifyNotes(SOCKET sock, bool in_system, char *user_name)
 		recv_res = recv(sock, (char*)&number_of_notes, sizeof(number_of_notes), 0);
 		if (recv_res != SOCKET_ERROR && recv_res != 0)
 		{
-			char *notes = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
-			recv_res = recv(sock, notes, NOTES_MAX_LEN, 0);
+			char *notes = (char*)calloc(NOTES_MAX_LEN + 1, sizeof(char));
+			recv_res = recv(sock, notes, NOTES_MAX_LEN + 1, 0);
 			notes = (char*)realloc(notes, strlen(notes) + 1);
 			if (recv_res != SOCKET_ERROR && recv_res != 0)
 			{

@@ -1,7 +1,2 @@
-﻿  Actions.cpp
-  Main.cpp
-  SendBroadcast.cpp
-  WorkWithClient.cpp
-  WorkWithFiles.cpp
-  Создание кода...
+﻿  WorkWithFiles.cpp
   Notes-server.vcxproj -> H:\Проекты\Семестр 4\КСиС\Курсовая работа\Network-notes\server\Debug\Notes-server.exe

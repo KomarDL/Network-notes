@@ -28,24 +28,25 @@ char **getNotesToWriteToTheEnd(int number_of_notes, char *user_name, int *result
 		result[i] = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
 	}
 
-	int res, result_curr_pos = 0;
+	int result_curr_pos = 0;
+	char *tmp;
 	char *file_name = formFileName(user_name);
-	char *notes = (char*)calloc(NOTES_MAX_LEN, sizeof(char));
+	char *notes = (char*)calloc(NOTES_MAX_LEN + 1, sizeof(char));
 	int read_lines_count = 0;
 	long int pos_of_notes_for_del = -1;
 	FILE *in;
 	fopen_s(&in, file_name, "r+");
 	while (!feof(in))
 	{
-		if (read_lines_count == number_of_notes - 1)
+		if (read_lines_count == number_of_notes)
 		{
 			pos_of_notes_for_del = ftell(in);
 		}
-		res = fscanf_s(in, "%s\n", notes, NOTES_MAX_LEN);
-		if (res != EOF)
+		tmp = fgets(notes, NOTES_MAX_LEN + 1, in);
+		if (tmp != NULL)
 		{
-			read_lines_count += res;
-			if ((read_lines_count > number_of_notes) && (res != 0))
+			read_lines_count++;
+			if (read_lines_count > number_of_notes + 1)
 			{
 				if (result_curr_pos == len)
 				{
@@ -68,7 +69,7 @@ char **getNotesToWriteToTheEnd(int number_of_notes, char *user_name, int *result
 	fclose(in);
 	/*truncate file*/
 	int hndl;
-	_sopen_s(&hndl, "1.txt", _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
+	_sopen_s(&hndl, file_name, _O_RDWR, _SH_DENYNO, _S_IREAD | _S_IWRITE);
 	_chsize_s(hndl, pos_of_notes_for_del);
 	_close(hndl);
 
@@ -142,7 +143,7 @@ int deleteNotes(int number_of_notes, char *user_name)
 	fopen_s(&out, file_name, "a");
 	for (int i = 0; i < len; i++)
 	{
-		fprintf_s(out, "%s\n", usefullNotes[i]);
+		fprintf_s(out, "%s", usefullNotes[i]);
 		free(usefullNotes[i]);
 	}
 	free(usefullNotes);
@@ -160,7 +161,7 @@ int changeNotes(int number_of_notes, char *user_name, char *notes)
 	fprintf_s(out, "%s\n", notes);
 	for (int i = 0; i < len; i++)
 	{
-		fprintf_s(out, "%s\n", usefullNotes[i]);
+		fprintf_s(out, "%s", usefullNotes[i]);
 		free(usefullNotes[i]);
 	}
 	free(usefullNotes);

@@ -58,6 +58,7 @@ void workWithClient(SOCKET client_sock)
 			}
 		}
 	} while (recv_res != 0 && recv_res != SOCKET_ERROR);
+
 	shutdown(client_sock, SD_BOTH);
 	closesocket(client_sock);
 	free(user_name);

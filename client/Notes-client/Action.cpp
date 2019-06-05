@@ -183,6 +183,12 @@ void getNotes(SOCKET &sock, char ***notes, int &len)
 
 void displayNotes(char **notes, int len)
 {
+	if ((len == 1) && (strcmp(notes[0], NOTES_NOT_FOUND) == 0))
+	{
+		printf_s("\t&%s\n\n", notes[0]);
+		return;
+	}
+
 	for (int i = 0; i < len; i++)
 	{
 		printf_s("%d) %s\n\n", i + 1, notes[i]);

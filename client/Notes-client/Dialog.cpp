@@ -32,12 +32,23 @@ void userInput(const char msg[], char *input_str, int str_len)
 	}
 }
 
-bool getValidNotesNumber(char **notes, int len)
+bool getValidNotesNumber(char **notes, int len, int &notes_number)
 {
 	bool ret_val = false;
 	if (!(len == 1 && (strcmp(notes[0], NOTES_NOT_FOUND) == 0)))
 	{
-
+		char *buff = (char*)calloc(NUMBER_OF_NOTES_BUFF_SIZE, sizeof(char));
+		notes_number = -1;
+		do
+		{
+			userInput("Ќомер заметки(-1 дл€ перехода в главное меню): ", buff, NUMBER_OF_NOTES_BUFF_SIZE);
+			notes_number = atoi(buff) - 1;
+			if ((notes_number > -1) && (notes_number < len))
+			{
+				ret_val = true;
+			}
+		} while ((!ret_val) || (notes_number == -2));
+		
 	}
 	return ret_val;
 }

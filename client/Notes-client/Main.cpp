@@ -51,18 +51,19 @@ int main()
 	bool correct_input = false;
 	system("cls");
 
+	displayNotes(notes, len);
+	displayMenu();
+
 	do
 	{
-		displayNotes(notes, len);
-		displayMenu();
-
 		do
 		{
 			userInput("Ваш выбор(учитывается только первый введённый символ): ", action, ACTION_STR_LEN);
 			tmp = atoi(action);
 			res = defineAction(tmp, action_type);
-			system("cls");
 		} while (res || (action_type == Registrate && action_type == Login));
+		system("cls");
+		displayNotes(notes, len);
 
 		switch (action_type)
 		{
@@ -72,24 +73,31 @@ int main()
 			break;
 		case RemoveNotes:
 			res = sendReqToRemoveNotes(sock, action_type, notes, len, correct_input);
-			if (correct_input)
+			if (correct_input && !res)
 			{
 				getNotes(sock, &notes, len);
 			}
 			break;
 		case ModifyNotes:
 			res = sendReqToModifyNotes(sock, action_type, notes, len, correct_input);
-			if (correct_input)
+			if (correct_input && !res)
 			{
 				getNotes(sock, &notes, len);
 			}
 			break;
 		}
-		//tmp = atoi(action);
-		//res = defineAction(tmp, action_type);
+		system("cls");
+		displayNotes(notes, len);
+		displayMenu();
 	} while (!res);
 
+	system("cls");
+	printf_s("Работа с заметками не может быть продолжена тк сервер закрыл соединение.\nПопробуйте позже");
 	getchar();
+
+	shutdown(sock, SD_BOTH);
+	closesocket(sock);
+	WSACleanup();
 
 	return 0;
 }

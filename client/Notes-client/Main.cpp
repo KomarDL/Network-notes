@@ -26,12 +26,14 @@ int main()
 
 	int res;
 	SOCKET sock = INVALID_SOCKET;
+	printf_s("ќжидание ответа сервера\n");
 	res = recvBroadcastUDP(sock);
 	if (res)
 	{
 		WSACleanup();
 		return 1;
 	}
+	system("cls");
 
 	res = registrateAndLogin(sock);
 	if (res)
